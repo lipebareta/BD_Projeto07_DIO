@@ -1,0 +1,23 @@
+# ============================================
+# COMANDOS PARA RECOVERY DO BANCO DE DADOS
+# ============================================
+
+# 1. Restaurar backup completo (precisa criar o banco primeiro)
+mysql -u root -p -e "CREATE DATABASE IF NOT EXISTS SistemaVendas;"
+mysql -u root -p SistemaVendas < backup_sistemavendas_completo.sql
+
+# 2. Restaurar diretamente (se o backup contiver o comando CREATE DATABASE)
+mysql -u root -p < backup_sistemavendas_completo.sql
+
+# 3. Restaurar arquivo compactado
+gunzip < backup_sistemavendas_20240318_143022.sql.gz | mysql -u root -p SistemaVendas
+
+# 4. Restaurar apenas procedures e funções
+mysql -u root -p SistemaVendas < backup_sistemavendas_estrutura.sql
+
+# 5. Restaurar para um banco com nome diferente
+mysql -u root -p -e "CREATE DATABASE IF NOT EXISTS SistemaVendas_Restore;"
+mysql -u root -p SistemaVendas_Restore < backup_sistemavendas_completo.sql
+
+# 6. Restaurar com log de progresso
+mysql -u root -p --verbose SistemaVendas < backup_sistemavendas_completo.sql > restauracao_log.txt 2>&1

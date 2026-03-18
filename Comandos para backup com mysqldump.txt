@@ -1,0 +1,24 @@
+# ============================================
+# COMANDOS PARA BACKUP DO BANCO DE DADOS
+# ============================================
+
+# 1. Backup completo do banco SistemaVendas (incluindo estrutura, dados, procedures, eventos)
+mysqldump -u root -p --routines --events --triggers --databases SistemaVendas > backup_sistemavendas_completo.sql
+
+# 2. Backup apenas da estrutura (sem dados)
+mysqldump -u root -p --no-data --routines --events --triggers --databases SistemaVendas > backup_sistemavendas_estrutura.sql
+
+# 3. Backup apenas dos dados (sem estrutura)
+mysqldump -u root -p --no-create-info --databases SistemaVendas > backup_sistemavendas_dados.sql
+
+# 4. Backup com compactação
+mysqldump -u root -p --routines --events --triggers --databases SistemaVendas | gzip > backup_sistemavendas_$(date +%Y%m%d_%H%M%S).sql.gz
+
+# 5. Backup de múltiplos bancos
+mysqldump -u root -p --routines --events --triggers --databases SistemaVendas mysql information_schema > backup_multiplos_bancos.sql
+
+# 6. Backup com condição WHERE (apenas registros recentes)
+mysqldump -u root -p --where="DataPedido >= '2024-01-01'" SistemaVendas Pedido > backup_pedidos_2024.sql
+
+# 7. Backup sem dados de tabelas específicas
+mysqldump -u root -p --routines --events --triggers --ignore-table=SistemaVendas.log_auditoria SistemaVendas > backup_sem_log.sql
